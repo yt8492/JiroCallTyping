@@ -61,7 +61,7 @@ class Game : RComponent<RProps, Game.State>() {
                 }
                 val currentPosition = gameState.typingCandidateList
                     .take(gameState.currentCharIndex)
-                    .sumBy { it.first().length } + gameState.currentRomeIndexList.first()
+                    .sumBy { it.first().length } + gameState.currentRomeIndex
                 val width = context.measureText(candidateSentence).width
                 var x = canvasWidth / 2 - width / 2
                 candidateSentence.forEachIndexed { index, c ->

@@ -15,39 +15,45 @@ sealed class GameState {
         val sentence: String,
         val typingCandidateList: List<List<String>>,
         val currentCharIndex: Int,
-        val currentRomeIndexList: List<Int>
+        val currentRomeIndex: Int
     ) : GameState() {
         fun input(input: Char): GameState {
-            val nextTypingCandidateAndRomeIndex = typingCandidateList[currentCharIndex].zip(currentRomeIndexList).takeWhile { (candidate, i) ->
-                candidate[i] == input
+            println(typingCandidateList)
+            val nextTypingCandidateAndRomeIndex = typingCandidateList[currentCharIndex].filter { candidate ->
+                candidate[currentRomeIndex] == input
             }
-            println(nextTypingCandidateAndRomeIndex)
             if (nextTypingCandidateAndRomeIndex.isNotEmpty()) {
-                val isLastIndex = currentCharIndex == typingCandidateList.lastIndex && nextTypingCandidateAndRomeIndex.any { (candidate, i) ->
-                    i + 1 == candidate.length
+                val isLastIndex = currentCharIndex == typingCandidateList.lastIndex && nextTypingCandidateAndRomeIndex.any { candidate ->
+                    currentRomeIndex + 1 == candidate.length
                 }
                 if (isLastIndex) {
                     return nextSentenceState(1)
                 }
-                val canMoveToNext = nextTypingCandidateAndRomeIndex.any { (candidate, i) ->
-                    i + 1 < candidate.length
+                val canMoveToNext = nextTypingCandidateAndRomeIndex.any { candidate ->
+                    currentRomeIndex + 1 < candidate.length
                 }
-                println(canMoveToNext)
+                val nextTypingCandidateList = typingCandidateList.mapIndexed { index, list ->
+                    if (index == currentCharIndex) {
+                        nextTypingCandidateAndRomeIndex
+                    } else {
+                        list
+                    }
+                }
                 if (canMoveToNext) {
                     return Playing(
                         score,
                         sentence,
-                        typingCandidateList,
+                        nextTypingCandidateList,
                         currentCharIndex,
-                        currentRomeIndexList.map { it + 1 }
+                        currentRomeIndex + 1
                     )
                 } else {
                     return Playing(
                         score,
                         sentence,
-                        typingCandidateList,
+                        nextTypingCandidateList,
                         currentCharIndex + 1,
-                        List(typingCandidateList.size) {0}
+                        0
                     )
                 }
             } else {
@@ -61,13 +67,12 @@ sealed class GameState {
         val sentence = JiroCallGenerator.generateSentence()
         val parsedSentence = parseSentence(sentence)
         val initialCandidateList = constructTypeSentence(parsedSentence)
-        val initialRomeIndexList = List(initialCandidateList.size) {0}
         return Playing(
             score + increment,
             sentence,
             initialCandidateList,
             0,
-            initialRomeIndexList
+            0
         )
     }
 }
