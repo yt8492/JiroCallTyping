@@ -14,42 +14,44 @@ sealed class GameState {
         override val score: Int,
         val sentence: String,
         val typingCandidateList: List<List<String>>,
-        val currentCharIndexList: List<Int>,
+        val currentCharIndex: Int,
         val currentRomeIndexList: List<Int>
     ) : GameState() {
         fun input(input: Char): GameState {
-            val nextTypingCandidateList = mutableListOf<List<String>>()
-            val nextCharIndexList = mutableListOf<Int>()
-            val nextRomeIndexList = mutableListOf<Int>()
-            var valid = false
-            for (i in typingCandidateList.indices) {
-                val candidate = typingCandidateList[i]
-                val charIndex = currentCharIndexList[i]
-                val romeIndex = currentRomeIndexList[i]
-                if (candidate[charIndex][romeIndex] == input) {
-                    valid = true
-                    when {
-                        romeIndex + 1 < candidate[charIndex].length -> {
-                            nextTypingCandidateList.add(candidate)
-                            nextCharIndexList.add(charIndex)
-                            nextRomeIndexList.add(romeIndex + 1)
-                        }
-                        charIndex + 1 < candidate[i].length -> {
-                            nextTypingCandidateList.add(candidate)
-                            nextCharIndexList.add(charIndex + 1)
-                            nextRomeIndexList.add(0)
-                        }
-                        else -> {
-                            // 入力された文字が文字列の最後の文字に一致
-                            return nextSentenceState(1)
-                        }
-                    }
-                }
+            val nextTypingCandidateAndRomeIndex = typingCandidateList[currentCharIndex].zip(currentRomeIndexList).takeWhile { (candidate, i) ->
+                candidate[i] == input
             }
-            return if (valid) {
-                Playing(score, sentence, nextTypingCandidateList, nextCharIndexList, nextRomeIndexList)
+            println(nextTypingCandidateAndRomeIndex)
+            if (nextTypingCandidateAndRomeIndex.isNotEmpty()) {
+                val isLastIndex = currentCharIndex == typingCandidateList.lastIndex && nextTypingCandidateAndRomeIndex.any { (candidate, i) ->
+                    i + 1 == candidate.length
+                }
+                if (isLastIndex) {
+                    return nextSentenceState(1)
+                }
+                val canMoveToNext = nextTypingCandidateAndRomeIndex.any { (candidate, i) ->
+                    i + 1 < candidate.length
+                }
+                println(canMoveToNext)
+                if (canMoveToNext) {
+                    return Playing(
+                        score,
+                        sentence,
+                        typingCandidateList,
+                        currentCharIndex,
+                        currentRomeIndexList.map { it + 1 }
+                    )
+                } else {
+                    return Playing(
+                        score,
+                        sentence,
+                        typingCandidateList,
+                        currentCharIndex + 1,
+                        List(typingCandidateList.size) {0}
+                    )
+                }
             } else {
-                this
+                return this
             }
         }
 
@@ -59,13 +61,12 @@ sealed class GameState {
         val sentence = JiroCallGenerator.generateSentence()
         val parsedSentence = parseSentence(sentence)
         val initialCandidateList = constructTypeSentence(parsedSentence)
-        val initialCharIndexList = List(initialCandidateList.size) {0}
         val initialRomeIndexList = List(initialCandidateList.size) {0}
         return Playing(
             score + increment,
             sentence,
             initialCandidateList,
-            initialCharIndexList,
+            0,
             initialRomeIndexList
         )
     }

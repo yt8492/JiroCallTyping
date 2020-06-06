@@ -1,12 +1,9 @@
-import logic.constructTypeSentence
-import logic.parseSentence
+import component.Game
+import react.dom.render
+import kotlin.browser.document
 
 fun main() {
-    val str = "ニンニクマシマシヤサイマシマシアブラカラメ"
-    println(parseSentence(str))
-    console.log(
-        constructTypeSentence(parseSentence(str)).joinToString("\n") { s ->
-            s.joinToString { it }
-        }
-    )
+    render(document.getElementById("root")) {
+        child(Game::class) {}
+    }
 }
