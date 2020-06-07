@@ -8,14 +8,17 @@ import kotlin.browser.window
 
 class Game : RComponent<RProps, Game.State>() {
 
+    init {
+        state.apply {
+            gameState = GameState.Start
+        }
+    }
+
     override fun componentDidMount() {
         window.addEventListener("keydown", {
             it as KeyboardEvent
             onInput(it.key)
         })
-        setState {
-            gameState = GameState.Start
-        }
     }
 
     private fun onInput(key: String) {
@@ -45,6 +48,8 @@ class Game : RComponent<RProps, Game.State>() {
             canvasWidth,
             canvasHeight
         )
+        context.fillStyle = "black"
+        context.font = "20px \"Hiragino Kaku Gothic ProN\""
         when (gameState) {
             is GameState.Start -> {
                 val message = "Please press space key to start game!"
@@ -53,8 +58,6 @@ class Game : RComponent<RProps, Game.State>() {
             }
             is GameState.Playing -> {
                 val sentence = gameState.sentence
-                context.fillStyle = "black"
-                context.font = "20px \"Hiragino Kaku Gothic ProN\""
                 context.fillText(sentence, canvasWidth / 2 - context.measureText(sentence).width / 2, 100.0)
                 val candidateSentence = gameState.typingCandidateList.joinToString("") {
                     it.first()

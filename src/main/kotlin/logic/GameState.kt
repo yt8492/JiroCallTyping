@@ -18,7 +18,6 @@ sealed class GameState {
         val currentRomeIndex: Int
     ) : GameState() {
         fun input(input: Char): GameState {
-            println(typingCandidateList)
             val nextTypingCandidateAndRomeIndex = typingCandidateList[currentCharIndex].filter { candidate ->
                 candidate[currentRomeIndex] == input
             }
