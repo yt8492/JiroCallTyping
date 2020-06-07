@@ -57,9 +57,9 @@ class Game : RComponent<RProps, Game.State>() {
         val title = "ジロリアンタイピング"
         val titleWidth = context.measureText(title).width
         context.fillText(title, canvasWidth / 2 - titleWidth / 2, 100.0)
-        val jiroHeight = 300.0
-        val jiroWidth = jiro.width * jiroHeight / jiro.height
-        drawImage(context, jiro, canvasWidth / 2 - jiroWidth / 2, 150.0, jiroWidth, jiroHeight)
+        val teninHeight = 300.0
+        val teninWidth = tenin.width * teninHeight / tenin.height
+        drawImage(context, tenin, canvasWidth / 2 - teninWidth / 2, 150.0, teninWidth, teninHeight)
         val message = "スペースキーでスタート"
         val messageWidth = context.measureText(message).width
         context.fillText(message, canvasWidth / 2 - messageWidth / 2, 500.0)
@@ -88,9 +88,9 @@ class Game : RComponent<RProps, Game.State>() {
             context.fillText(c.toString(), x, 150.0)
             x += context.measureText(c.toString()).width
         }
-        val teninHeight = 300.0
-        val teninWidth = tenin.width * teninHeight / tenin.height
-        drawImage(context, tenin, canvasWidth / 2 - teninWidth / 2, 250.0, teninWidth, teninHeight)
+        val jiroHeight = 300.0
+        val jiroWidth = jiro.width * jiroHeight / jiro.height
+        drawImage(context, jiro, canvasWidth / 2 - jiroWidth / 2, 250.0, jiroWidth, jiroHeight)
     }
 
     private fun drawEnd(context: CanvasRenderingContext2D, gameState: GameState.End) {
