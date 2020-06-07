@@ -61,8 +61,9 @@ class Game : RComponent<RProps, Game.State>() {
 
     private fun drawPlaying(context: CanvasRenderingContext2D, gameState: GameState.Playing) {
         val canvasWidth = context.canvas.width.toDouble()
+        context.fillText("スコア: ${gameState.score}杯", 50.0, 50.0)
         val sentence = gameState.sentence
-        context.fillText(sentence, canvasWidth / 2 - context.measureText(sentence).width / 2, 50.0)
+        context.fillText(sentence, canvasWidth / 2 - context.measureText(sentence).width / 2, 100.0)
         val candidateSentence = gameState.typingCandidateList.joinToString("") {
             it.first()
         }
@@ -77,12 +78,12 @@ class Game : RComponent<RProps, Game.State>() {
             } else {
                 context.fillStyle = "black"
             }
-            context.fillText(c.toString(), x, 100.0)
+            context.fillText(c.toString(), x, 150.0)
             x += context.measureText(c.toString()).width
         }
         val teninHeight = 300.0
         val teninWidth = tenin.width * teninHeight / tenin.height
-        drawImage(context, tenin, canvasWidth / 2 - teninWidth / 2, 200.0, teninWidth, teninHeight)
+        drawImage(context, tenin, canvasWidth / 2 - teninWidth / 2, 250.0, teninWidth, teninHeight)
     }
 
     private fun drawGameState(context: CanvasRenderingContext2D, gameState: GameState) {
