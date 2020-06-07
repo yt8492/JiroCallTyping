@@ -108,7 +108,7 @@ class Game : RComponent<RProps, Game.State>() {
         val meganeHeight = 300.0
         val meganeWidth = megane.width * meganeHeight / megane.height
         drawImage(context, megane, canvasWidth / 2 - meganeWidth / 2, 200.0, meganeWidth, meganeHeight)
-        val restartText = "スペースキーでリスタート"
+        val restartText = "スペースキーでタイトルに戻る"
         val restartWidth = context.measureText(restartText).width
         context.fillText(restartText, canvasWidth / 2 - restartWidth / 2, 550.0)
     }
