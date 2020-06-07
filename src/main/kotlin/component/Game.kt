@@ -9,17 +9,16 @@ import kotlin.browser.window
 
 class Game : RComponent<RProps, Game.State>() {
 
-    init {
-        state.apply {
-            gameState = GameState.Start
-        }
-    }
-
     override fun componentDidMount() {
         window.addEventListener("keydown", {
             it as KeyboardEvent
             onInput(it.key)
         })
+        jiro.onload = {
+            setState {
+                gameState = GameState.Start
+            }
+        }
     }
 
     private fun onInput(key: String) {
